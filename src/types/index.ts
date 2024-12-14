@@ -8,4 +8,5 @@ export type Activity = {
     name: string,
     category: number,
     calories: number
-}
+};
+
