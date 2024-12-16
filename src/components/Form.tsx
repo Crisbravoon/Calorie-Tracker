@@ -1,28 +1,41 @@
 
-import { useState, ChangeEvent, FormEvent, Dispatch } from "react";
+import { useState, ChangeEvent, FormEvent, Dispatch, useEffect } from "react";
 
-import { ActivityActions } from "../reducers/activity-reducer";
+import { v4 as uuidv4 } from 'uuid';
+
+import { ActivityActions, ActivityState } from "../reducers/activity-reducer";
 import { categories } from "../data/categories";
 import { Activity } from "../types";
 
 type FormProps = {
-    dispatch: Dispatch<ActivityActions>
-}
+    dispatch: Dispatch<ActivityActions>,
+    state: ActivityState
+};
 
-const initialState = {
+const initialState: Activity = {
+    id: uuidv4(),
     category: 1,
     name: '',
     calories: 0
-}
-const Form = ({ dispatch }: FormProps) => {
+};
+
+const Form = ({ dispatch, state }: FormProps) => {
 
     const [activity, setActivity] = useState<Activity>(initialState);
+
+    useEffect(() => {
+        if (state.activeID) {
+
+            const selectActivity = state.activities.filter(stateActivity => stateActivity.id === state.activeID)[0]
+            setActivity(selectActivity);
+        }
+    }, [state.activeID])
+
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>) => {
 
         // Verifica si el campo es de tipo numérico comparando el ID del campo con 'category' o 'calories'
         const isNumberField = ['category', 'calories'].includes(e.target.id);
-        console.log(isNumberField)
 
         // Actualiza el estado 'activity' manteniendo los valores anteriores
         setActivity({
@@ -32,7 +45,6 @@ const Form = ({ dispatch }: FormProps) => {
                     : e.target.value
         })
     };
-
 
     //Validamos que no esten vacios los campos
     const isValidActivity = () => {
@@ -49,7 +61,10 @@ const Form = ({ dispatch }: FormProps) => {
         dispatch({ type: 'save-activity', payload: { newActivity: activity } })
 
         // Resetea el formulario
-        setActivity(initialState);
+        setActivity({
+            ...initialState,
+            id: uuidv4()
+        });
 
     };
 
