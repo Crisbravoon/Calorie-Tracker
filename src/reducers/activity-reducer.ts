@@ -1,15 +1,24 @@
 
 import { Activity } from "../types";
 
+
+const localStorageActivities = () => {
+    // Obtiene las actividades guardadas en el local storage
+    return JSON.parse(localStorage.getItem('activities') || '[]');
+};
+
+
 // Estado inicial de las Actividades
 export const initialState: ActivityState = {
-    activities: [],
+    activities: localStorageActivities(),
     activeID: ''
 };
 
 export type ActivityActions =
     { type: 'save-activity', payload: { newActivity: Activity } } |
-    { type: 'set-activeId', payload: { id: Activity['id'] } }
+    { type: 'set-activeId', payload: { id: Activity['id'] } } |
+    { type: 'delete-activity', payload: { id: Activity['id'] } } |
+    { type: 'restart-activity' }
 
 // Interfaz del estado de las Actividades
 export type ActivityState = {
@@ -20,20 +29,37 @@ export type ActivityState = {
 // Reducer para las Actividades
 export const activityReducer = (
 
-
     state: ActivityState = initialState, action: ActivityActions) => {
 
     switch (action.type) {
         case 'save-activity':
             return {
                 ...state,
-                activities: [...state.activities, action.payload.newActivity],
+                activeID: '',
+                activities: state.activeID
+                    // Actualiza la lista de actividades, reemplazando la actividad activa con la nueva
+                    ? state.activities.map(activity => activity.id === state.activeID ? action.payload.newActivity : activity)
+                    // Actualiza la lista de actividades
+                    : [...state.activities, action.payload.newActivity]
             }
+
         case 'set-activeId':
             return {
                 ...state,
                 // Actualiza el ID activo
                 activeID: action.payload.id,
+            }
+
+        case 'delete-activity':
+            return {
+                ...state,
+                activities: state.activities.filter(activity => activity.id !== action.payload.id),
+            }
+
+        case 'restart-activity':
+            return {
+                activities: [],
+                activeID: ''
             }
     }
 };
