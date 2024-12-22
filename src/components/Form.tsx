@@ -26,6 +26,7 @@ const Form = ({ dispatch, state }: FormProps) => {
     useEffect(() => {
         if (state.activeID) {
 
+            // Buscamos la actividad activa en el estado 'activities' y la establecemos en 'activity'
             const selectActivity = state.activities.filter(stateActivity => stateActivity.id === state.activeID)[0]
             setActivity(selectActivity);
         }

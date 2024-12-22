@@ -6,6 +6,7 @@ import ActivityList from "./components/ActivityList";
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 
 import Form from "./components/Form";
+import CalorieTracker from "./components/CalorieTracker";
 
 
 
@@ -23,7 +24,7 @@ function App() {
   return (
     <>
       <header className="bg-lime-600 p-3">
-        <div className="max-w-4xl mx-auto flex justify-between">
+        <div className="max-w-4xl mx-auto flex justify-between items-center">
           <h1 className=" text-center text-lg font-bold text-white uppercase">
             Contador de Calorias
           </h1>
@@ -33,25 +34,33 @@ function App() {
             disabled={!resetAppState()}
             onClick={() => dispatch({ type: 'restart-activity' })}
           >Reiniciar APP
-            <ArrowPathIcon className="w-6 text-white"/>
-            
+            <ArrowPathIcon className="w-6 text-white" />
+
           </button>
         </div>
       </header>
+
       <section className="bg-lime-500 py-20 px-5">
         <div className="max-w-4xl mx-auto">
           <Form
             dispatch={dispatch}
             state={state} />
         </div>
-
-
       </section>
+
+      <section className="bg-gray-800 py-10">
+        <div className="mx-auto max-w-4xl">
+          <CalorieTracker
+          activities={state.activities} />
+        </div>
+      </section>
+
       <section className="p-10 mx-auto max-w-4xl">
         <ActivityList
           activities={state.activities}
           dispatch={dispatch} />
       </section>
+
     </>
   )
 }

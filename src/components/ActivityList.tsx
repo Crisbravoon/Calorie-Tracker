@@ -47,7 +47,10 @@ const ActivityList = ({ activities, dispatch }: ActivityListProps) => {
                         <div className=" flex gap-5 items-center">
                             <button
                                 className="h-8 w-8 text-slate-600 hover:text-lime-600"
-                                onClick={() => dispatch({ type: "set-activeId", payload: { id: activity.id } })}
+                                
+                                onClick={() => {
+                                    dispatch({ type: "set-activeID", payload: { id: activity.id } });
+                                }}
                             >
                                 <PencilSquareIcon />
                             </button>
